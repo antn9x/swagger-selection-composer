@@ -1,5 +1,5 @@
 export function getNameByRouter(router = '') {
-  return router.slice(1).replace('/', '_')
+  return router.slice(1).replace(/\//g, '_')
     .replace('{', '')
     .replace('}', '');
 }
