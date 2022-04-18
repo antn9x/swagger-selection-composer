@@ -130,15 +130,6 @@ export function createModelCommand(context: vscode.ExtensionContext, folderUri: 
 
 export function createSchemaCommand(context: vscode.ExtensionContext, folderUri: vscode.Uri) {
   let disposable = vscode.commands.registerCommand('swagger-api-generator.createSchema', async () => {
-    const moduleList = context.workspaceState.get('moduleList', []);
-    const module = await vscode.window.showQuickPick(moduleList, {
-      placeHolder: 'Select module',
-      // onDidSelectItem: item => vscode.window.showInformationMessage(`Focus ${++i}: ${item}`)
-    });
-    if (!module) {
-      return vscode.window.showErrorMessage(`Not module!`);
-    }
-
     const schema = await vscode.window.showInputBox({
       value: '',
       placeHolder: 'For example: UserData',
@@ -175,15 +166,6 @@ export function createSchemaCommand(context: vscode.ExtensionContext, folderUri:
 
 export function createObjectCommand(context: vscode.ExtensionContext, folderUri: vscode.Uri) {
   let disposable = vscode.commands.registerCommand('swagger-api-generator.createObject', async () => {
-    const moduleList = context.workspaceState.get('moduleList', []);
-    const module = await vscode.window.showQuickPick(moduleList, {
-      placeHolder: 'Select module',
-      // onDidSelectItem: item => vscode.window.showInformationMessage(`Focus ${++i}: ${item}`)
-    });
-    if (!module) {
-      return vscode.window.showErrorMessage(`Not module!`);
-    }
-
     const schema = await vscode.window.showInputBox({
       value: '',
       placeHolder: 'For example: UserData',
