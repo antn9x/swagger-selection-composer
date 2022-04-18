@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import { posix } from 'path';
 import * as vscode from 'vscode';
-import { createApiCommand } from './commands';
+import { addModuleCommand, createApiCommand, createModelCommand, createObjectCommand, createSchemaCommand } from './commands';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -10,7 +10,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
-  console.log('Congratulations, your extension "swagger-selection-composer" is now active!');
+  console.log('Congratulations, your extension "swagger-api-generator" is now active!');
 
   if (!vscode.workspace.workspaceFolders) {
     return vscode.window.showInformationMessage('No folder or workspace opened');
@@ -28,6 +28,10 @@ export async function activate(context: vscode.ExtensionContext) {
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
   createApiCommand(context, folderUri);
+  createModelCommand(context, folderUri);
+  createSchemaCommand(context, folderUri);
+  createObjectCommand(context, folderUri);
+  addModuleCommand(context, folderUri);
 }
 
 // this method is called when your extension is deactivated

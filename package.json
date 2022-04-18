@@ -1,9 +1,9 @@
 {
-  "name": "swagger-selection-composer",
+  "name": "swagger-api-generator",
   "displayName": "swagger api generator",
   "description": "Swagger api generator and composer",
   "version": "0.0.1",
-  "repository": "https://github.com/antn9x/swagger-selection-composer",
+  "repository": "https://github.com/antn9x/swagger-api-generator",
   "publisher": "antn9x",
   "engines": {
     "vscode": "^1.66.0"
@@ -12,29 +12,33 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:swagger-selection-composer.createApi"
+    "onCommand:swagger-api-generator.createModel",
+    "onCommand:swagger-api-generator.createSchema",
+    "onCommand:swagger-api-generator.createObject",
+    "onCommand:swagger-api-generator.addModule",
+    "onCommand:swagger-api-generator.createApi"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "swagger-selection-composer.createApi",
+        "command": "swagger-api-generator.createApi",
         "title": "Swagger Api Generator: Create new path"
       },
       {
-        "command": "swagger-selection-composer.createModel",
+        "command": "swagger-api-generator.createModel",
         "title": "Swagger Api Generator: Create new model"
       },
       {
-        "command": "swagger-selection-composer.createSchema",
+        "command": "swagger-api-generator.createSchema",
         "title": "Swagger Api Generator: Create new schema"
       },
       {
-        "command": "swagger-selection-composer.createObject",
+        "command": "swagger-api-generator.createObject",
         "title": "Swagger Api Generator: Create new object"
       },
       {
-        "command": "swagger-selection-composer.addModule",
+        "command": "swagger-api-generator.addModule",
         "title": "Swagger Api Generator: Add new module"
       }
     ]
@@ -73,6 +77,7 @@
   "dependencies": {
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
-    "pluralize": "^8.0.0"
+    "pluralize": "^8.0.0",
+    "sort-keys": "^5.0.0"
   }
 }

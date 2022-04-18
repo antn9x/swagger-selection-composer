@@ -51,3 +51,15 @@ export function createApiMethod(method: Method, module: string, router: string) 
     }
   };
 }
+
+export function createDefaultSchema() {
+  return {
+    type: 'object',
+    properties: {
+      _id: {
+        type: 'string'
+      }
+    },
+    required: ['_id']
+  };
+}
