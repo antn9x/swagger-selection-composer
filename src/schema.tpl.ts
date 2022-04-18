@@ -21,7 +21,7 @@ export function createApiMethod(method: Method, module: string, router: string) 
       schema: {
         type: 'string',
         example: '6197144c893ed4d8d611ed8d'
-      }
+      },
     }],
     requestBody: {
       required: true,
@@ -33,7 +33,7 @@ export function createApiMethod(method: Method, module: string, router: string) 
     },
     responses: {
       '200': {
-        description: `create animal`,
+        description: `${methodMap[method]} ${module} success`,
         content: {
           'application/json': {
             schema: {
