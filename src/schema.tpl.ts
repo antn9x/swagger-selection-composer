@@ -17,7 +17,7 @@ export function createApiMethod(method: Method, module: string, router: string) 
     parameters: [{
       in: 'path',
       name: 'id',
-      require: true,
+      required: true,
       schema: {
         type: 'string',
         example: '6197144c893ed4d8d611ed8d'

@@ -8,6 +8,7 @@ import { createApiMethod, createDefaultSchema, Method } from './schema.tpl';
 import { getNameByRouter } from './stringUtils';
 import { jsonToYaml } from './yamlUtils';
 import sortKeys from 'sort-keys';
+import * as fs from 'fs';
 
 export function createApiCommand(context: vscode.ExtensionContext, folderUri: vscode.Uri) {
   let disposable = vscode.commands.registerCommand('swagger-api-generator.createApi', async () => {
@@ -51,7 +52,7 @@ export function createApiCommand(context: vscode.ExtensionContext, folderUri: vs
 
     const readData = await vscode.workspace.fs.readFile(fileUri);
     const content = Buffer.from(readData).toString('utf8');
-    const json: any = yaml.load(content);
+    const json: any = content ? yaml.load(content) : {};
     const routePath = `/${plural(module)}${router ? `/${router}` : ''}`;
     const name = getNameByRouter(routePath);
     json.paths[routePath] = { $ref: `routers/${module}.yaml#/${name}` };
@@ -64,7 +65,7 @@ export function createApiCommand(context: vscode.ExtensionContext, folderUri: vs
 
     const moduleFilePath = posix.join(folderUri.path, 'docs', 'routers', `${module}.yaml`);
     const moduleRouter = await readFileContent(moduleFilePath);
-    const jsonRouter: any = yaml.load(moduleRouter);
+    const jsonRouter: any = moduleRouter ? yaml.load(moduleRouter) : {};
     if (!jsonRouter[name]) {
       jsonRouter[name] = {};
     }
@@ -226,10 +227,16 @@ export function addModuleCommand(context: vscode.ExtensionContext, folderUri: vs
     if (!module) {
       return vscode.window.showErrorMessage(`Not module name!`);
     }
-    const moduleFilePath = posix.join(folderUri.path, 'docs', 'routes', `${module}.yaml`);
+    const moduleFilePath = posix.join(folderUri.path, 'docs', 'routers', `${module}.yaml`);
+    if (fs.existsSync(moduleFilePath)) {
+      return vscode.window.showErrorMessage(`Module name existed!`);
+    }
     await writeFileContent(moduleFilePath, '');
     // vscode.window.showInformationMessage(readStr);
     vscode.window.showTextDocument(vscode.Uri.file(moduleFilePath));
+    const moduleList: any[] = context.workspaceState.get('moduleList', []);
+    moduleList.unshift(module);
+    context.workspaceState.update('moduleList', moduleList);
   });
 
   context.subscriptions.push(disposable);
