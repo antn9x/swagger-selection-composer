@@ -166,20 +166,20 @@ export function createSchemaCommand(context: vscode.ExtensionContext, folderUri:
 
 export function createObjectCommand(context: vscode.ExtensionContext, folderUri: vscode.Uri) {
   let disposable = vscode.commands.registerCommand('swagger-api-generator.createObject', async () => {
-    const schema = await vscode.window.showInputBox({
+    const obj = await vscode.window.showInputBox({
       value: '',
       placeHolder: 'For example: UserData',
     });
-    if (!schema) {
-      return vscode.window.showErrorMessage(`Not schema name!`);
+    if (!obj) {
+      return vscode.window.showErrorMessage(`Not obj name!`);
     }
     const apiFilePath = posix.join(folderUri.path, 'docs', 'api.yaml');
     const content = await readFileContent(apiFilePath);
     const json: any = yaml.load(content);
-    if (json.components.schemas[schema]) {
+    if (json.components.schemas[obj]) {
       return vscode.window.showErrorMessage(`Schema name existed!`);
     }
-    json.components.schemas[schema] = { $ref: `schemas/${module}.yaml#/${schema}` };
+    json.components.schemas[obj] = { $ref: `objects/${module}.yaml#/${obj}` };
     json.components.schemas = sortKeys(json.components.schemas, {
       compare: (a, b) => json.components.schemas[a].$ref.localeCompare(json.components.schemas[b].$ref)
     });
@@ -189,8 +189,8 @@ export function createObjectCommand(context: vscode.ExtensionContext, folderUri:
     const moduleFilePath = posix.join(folderUri.path, 'docs', 'objects.yaml');
     const moduleRouter = await readFileContent(moduleFilePath);
     const jsonSchema: any = yaml.load(moduleRouter);
-    if (!jsonSchema[schema]) {
-      jsonSchema[schema] = createDefaultSchema();
+    if (!jsonSchema[obj]) {
+      jsonSchema[obj] = createDefaultSchema();
     }
     await writeFileContent(moduleFilePath, jsonToYaml(jsonSchema));
     // vscode.window.showInformationMessage(readStr);
