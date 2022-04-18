@@ -1,8 +1,10 @@
 {
   "name": "swagger-selection-composer",
-  "displayName": "swagger-selection-composer",
-  "description": "",
+  "displayName": "swagger api generator",
+  "description": "Swagger api generator and composer",
   "version": "0.0.1",
+  "repository": "https://github.com/antn9x/swagger-selection-composer",
+  "publisher": "antn9x",
   "engines": {
     "vscode": "^1.66.0"
   },
@@ -17,11 +19,28 @@
     "commands": [
       {
         "command": "swagger-selection-composer.createApi",
-        "title": "Swagger composer create new api path"
+        "title": "Swagger Api Generator: Create new path"
+      },
+      {
+        "command": "swagger-selection-composer.createModel",
+        "title": "Swagger Api Generator: Create new model"
+      },
+      {
+        "command": "swagger-selection-composer.createSchema",
+        "title": "Swagger Api Generator: Create new schema"
+      },
+      {
+        "command": "swagger-selection-composer.createObject",
+        "title": "Swagger Api Generator: Create new object"
+      },
+      {
+        "command": "swagger-selection-composer.addModule",
+        "title": "Swagger Api Generator: Add new module"
       }
     ]
   },
   "scripts": {
+    "deploy": "vsce package",
     "vscode:prepublish": "yarn run package",
     "compile": "webpack",
     "watch": "webpack --watch",
@@ -33,19 +52,27 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.66.0",
     "@types/glob": "^7.2.0",
+    "@types/js-yaml": "^4.0.5",
+    "@types/lodash": "^4.14.181",
     "@types/mocha": "^9.1.0",
     "@types/node": "14.x",
+    "@types/pluralize": "^0.0.29",
+    "@types/vscode": "^1.66.0",
     "@typescript-eslint/eslint-plugin": "^5.16.0",
     "@typescript-eslint/parser": "^5.16.0",
+    "@vscode/test-electron": "^2.1.3",
     "eslint": "^8.11.0",
     "glob": "^7.2.0",
     "mocha": "^9.2.2",
-    "typescript": "^4.5.5",
     "ts-loader": "^9.2.8",
+    "typescript": "^4.5.5",
     "webpack": "^5.70.0",
-    "webpack-cli": "^4.9.2",
-    "@vscode/test-electron": "^2.1.3"
+    "webpack-cli": "^4.9.2"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21",
+    "pluralize": "^8.0.0"
   }
 }

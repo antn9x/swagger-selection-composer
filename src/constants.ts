@@ -1,1 +1,3 @@
-export const methods = ['get', 'post', 'put', 'delete'];
+import { Method } from "./schema.tpl";
+
+export const methods: Method[] = ['get', 'post', 'put', 'delete'];
