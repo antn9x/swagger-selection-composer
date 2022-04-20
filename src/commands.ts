@@ -143,7 +143,7 @@ export function createSchemaCommand(context: vscode.ExtensionContext, folderUri:
     if (json.components.schemas[schema]) {
       return vscode.window.showErrorMessage(`Schema name existed!`);
     }
-    json.components.schemas[schema] = { $ref: `schemas/${module}.yaml#/${schema}` };
+    json.components.schemas[schema] = { $ref: `schemas.yaml#/${schema}` };
     json.components.schemas = sortKeys(json.components.schemas, {
       compare: (a, b) => json.components.schemas[a].$ref.localeCompare(json.components.schemas[b].$ref)
     });
@@ -179,7 +179,7 @@ export function createObjectCommand(context: vscode.ExtensionContext, folderUri:
     if (json.components.schemas[obj]) {
       return vscode.window.showErrorMessage(`Schema name existed!`);
     }
-    json.components.schemas[obj] = { $ref: `objects/${module}.yaml#/${obj}` };
+    json.components.schemas[obj] = { $ref: `objects.yaml#/${obj}` };
     json.components.schemas = sortKeys(json.components.schemas, {
       compare: (a, b) => json.components.schemas[a].$ref.localeCompare(json.components.schemas[b].$ref)
     });
