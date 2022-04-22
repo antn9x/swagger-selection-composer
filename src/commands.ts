@@ -5,7 +5,7 @@ import * as vscode from 'vscode';
 import { methods } from './constants';
 import { readFileContent, writeFileContent } from './fileUtils';
 import { createApiMethod, createDefaultSchema, Method } from './schema.tpl';
-import { getNameByRouter } from './stringUtils';
+import { getModuleName, getNameByRouter } from './stringUtils';
 import { jsonToYaml } from './yamlUtils';
 import sortKeys from 'sort-keys';
 import * as fs from 'fs';
@@ -53,9 +53,10 @@ export function createApiCommand(context: vscode.ExtensionContext, folderUri: vs
     const readData = await vscode.workspace.fs.readFile(fileUri);
     const content = Buffer.from(readData).toString('utf8');
     const json: any = content ? yaml.load(content) : {};
-    const routePath = `/${plural(module)}${router ? `/${router}` : ''}`;
+    const moduleName = getModuleName(module);
+    const routePath = `/${moduleName}${router ? `/${router}` : ''}`;
     const name = getNameByRouter(routePath);
-    json.paths[routePath] = { $ref: `routers/${module}.yaml#/${name}` };
+    json.paths[routePath] = { $ref: `routers/${moduleName}.yaml#/${name}` };
     json.paths = sortKeys(json.paths, {
       compare: (a, b) => json.paths[a].$ref.localeCompare(json.paths[b].$ref)
     });
@@ -63,7 +64,7 @@ export function createApiCommand(context: vscode.ExtensionContext, folderUri: vs
     const indexData = Buffer.from(indexStr, 'utf8');
     await vscode.workspace.fs.writeFile(fileUri, indexData);
 
-    const moduleFilePath = posix.join(folderUri.path, 'docs', 'routers', `${module}.yaml`);
+    const moduleFilePath = posix.join(folderUri.path, 'docs', 'routers', `${moduleName}.yaml`);
     const moduleRouter = await readFileContent(moduleFilePath);
     const jsonRouter: any = moduleRouter ? yaml.load(moduleRouter) : {};
     if (!jsonRouter[name]) {
@@ -71,7 +72,7 @@ export function createApiCommand(context: vscode.ExtensionContext, folderUri: vs
     }
     selectedMethods.forEach(method => {
       if (!jsonRouter[name][method]) {
-        jsonRouter[name][method] = createApiMethod(method, module, routePath);
+        jsonRouter[name][method] = createApiMethod(method, moduleName, routePath);
       }
     });
     await writeFileContent(moduleFilePath, jsonToYaml(jsonRouter));

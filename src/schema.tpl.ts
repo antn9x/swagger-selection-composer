@@ -1,4 +1,5 @@
 import upperFirst from 'lodash/upperFirst';
+import { getNameByRouter } from './stringUtils';
 
 const methodMap = {
   get: 'Get',
@@ -9,10 +10,15 @@ const methodMap = {
 
 export type Method = 'get' | 'post' | 'put' | 'delete';
 
+function getSummary(method: Method, module: string, router: string) {
+  return `${methodMap[method]} ${router.split('/').length >= 3 ?
+    getNameByRouter(router) : module}`;
+}
+
 export function createApiMethod(method: Method, module: string, router: string) {
   return {
     tags: [upperFirst(module)],
-    summary: `${methodMap[method]} ${module}`,
+    summary: getSummary(method, module, router),
     security: [{ bearerAuth: [] }],
     parameters: [{
       in: 'path',
@@ -33,7 +39,7 @@ export function createApiMethod(method: Method, module: string, router: string) 
     },
     responses: {
       '200': {
-        description: `${methodMap[method]} ${module} success`,
+        description: `${getSummary(method, module, router)} success`,
         content: {
           'application/json': {
             schema: {

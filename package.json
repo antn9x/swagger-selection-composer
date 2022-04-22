@@ -2,7 +2,7 @@
   "name": "swagger-api-generator",
   "displayName": "swagger api generator",
   "description": "Swagger api generator and composer",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "repository": "https://github.com/antn9x/swagger-api-generator",
   "publisher": "antn9x",
   "engines": {
