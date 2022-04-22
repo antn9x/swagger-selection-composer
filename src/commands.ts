@@ -116,7 +116,7 @@ export function createModelCommand(context: vscode.ExtensionContext, folderUri: 
 
     const moduleFilePath = posix.join(folderUri.path, 'docs', 'models', `${module}.yaml`);
     const moduleRouter = await readFileContent(moduleFilePath);
-    const jsonModel: any = yaml.load(moduleRouter);
+    const jsonModel: any = yaml.load(moduleRouter) || {};
     if (!jsonModel[model]) {
       jsonModel[model] = createDefaultSchema();
     }
@@ -152,7 +152,7 @@ export function createSchemaCommand(context: vscode.ExtensionContext, folderUri:
 
     const moduleFilePath = posix.join(folderUri.path, 'docs', 'schemas.yaml');
     const moduleRouter = await readFileContent(moduleFilePath);
-    const jsonSchema: any = yaml.load(moduleRouter);
+    const jsonSchema: any = yaml.load(moduleRouter) || {};
     if (!jsonSchema[schema]) {
       jsonSchema[schema] = createDefaultSchema();
     }
@@ -188,7 +188,7 @@ export function createObjectCommand(context: vscode.ExtensionContext, folderUri:
 
     const moduleFilePath = posix.join(folderUri.path, 'docs', 'objects.yaml');
     const moduleRouter = await readFileContent(moduleFilePath);
-    const jsonSchema: any = yaml.load(moduleRouter);
+    const jsonSchema: any = yaml.load(moduleRouter) || {};
     if (!jsonSchema[obj]) {
       jsonSchema[obj] = createDefaultSchema();
     }
