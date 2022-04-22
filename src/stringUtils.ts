@@ -1,5 +1,5 @@
 import last from 'lodash/last';
-import { plural } from "pluralize";
+import { singular, plural } from "pluralize";
 
 export function getNameByRouter(router = '') {
   const splitted = router.split('/');
@@ -12,6 +12,13 @@ export function getNameByRouter(router = '') {
 }
 
 export function getModuleName(name = '') {
+  if (['auth'].includes(name)) {
+    return name;
+  };
+  return singular(name);
+}
+
+export function getRouterName(name = '') {
   if (['auth'].includes(name)) {
     return name;
   };

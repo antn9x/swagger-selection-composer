@@ -5,7 +5,7 @@ import * as vscode from 'vscode';
 import { methods } from './constants';
 import { readFileContent, writeFileContent } from './fileUtils';
 import { createApiMethod, createDefaultSchema, Method } from './schema.tpl';
-import { getModuleName, getNameByRouter } from './stringUtils';
+import { getModuleName, getNameByRouter, getRouterName } from './stringUtils';
 import { jsonToYaml } from './yamlUtils';
 import sortKeys from 'sort-keys';
 import * as fs from 'fs';
@@ -54,8 +54,8 @@ export function createApiCommand(context: vscode.ExtensionContext, folderUri: vs
     const content = Buffer.from(readData).toString('utf8');
     const json: any = content ? yaml.load(content) : {};
     const moduleName = getModuleName(module);
-    const routePath = `/${moduleName}${router ? `/${router}` : ''}`;
-    const name = getNameByRouter(routePath);
+    const routePath = `/${getRouterName(moduleName)}${router ? `/${router}` : ''}`;
+    const name = router ? getNameByRouter(routePath) : getRouterName(moduleName);
     json.paths[routePath] = { $ref: `routers/${moduleName}.yaml#/${name}` };
     json.paths = sortKeys(json.paths, {
       compare: (a, b) => json.paths[a].$ref.localeCompare(json.paths[b].$ref)
