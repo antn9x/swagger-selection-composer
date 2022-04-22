@@ -214,6 +214,8 @@ export function addModuleCommand(context: vscode.ExtensionContext, folderUri: vs
       return vscode.window.showErrorMessage(`Module name existed!`);
     }
     await writeFileContent(moduleFilePath, '');
+    const modelsFilePath = posix.join(folderUri.path, 'docs', 'models', `${module}.yaml`);
+    await writeFileContent(modelsFilePath, '');
     // vscode.window.showInformationMessage(readStr);
     vscode.window.showTextDocument(vscode.Uri.file(moduleFilePath));
     const moduleList: any[] = context.workspaceState.get('moduleList', []);
