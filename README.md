@@ -1,10 +1,6 @@
 # README
 
-This is extension to select swagger type validation and more;
-
-## Features
-
-Just select drop box and choose.
+This is extension to generate swagger api by structured;
 
 ## Commands
  - `Swagger Api Generator: Create new path`
@@ -15,6 +11,9 @@ Just select drop box and choose.
 ## Requirements
 
 Create swagger `docs` folder in your project first.
+ - `docs/routers`
+ - `docs/models`
+ - `docs/api.yaml`
 
 ## Release Notes
 

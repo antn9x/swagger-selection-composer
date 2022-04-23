@@ -33,7 +33,7 @@ export function createApiMethod(method: Method, module: string, router: string) 
       required: true,
       content: {
         'application/json': {
-          schema: { type: 'object', properties: { id: { type: 'string' } } }
+          schema: { type: 'object', properties: { name: { type: 'string' } } }
         }
       }
     },
@@ -62,10 +62,10 @@ export function createDefaultSchema() {
   return {
     type: 'object',
     properties: {
-      _id: {
+      name: {
         type: 'string'
       }
     },
-    required: ['_id']
+    required: ['name']
   };
 }
