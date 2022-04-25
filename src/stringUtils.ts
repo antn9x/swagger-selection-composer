@@ -3,7 +3,7 @@ import { singular, plural } from "pluralize";
 
 export function getNameByRouter(router = '') {
   const splitted = router.split('/');
-  if (splitted.length >= 3) {
+  if (splitted.length > 3) {
     return last(splitted) || '';
   }
   return router.slice(1).replace(/\//g, '_')
