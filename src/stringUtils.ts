@@ -12,7 +12,7 @@ export function getNameByRouter(router = '') {
 }
 
 export function getModuleName(name = '') {
-  if (['auth'].includes(name)) {
+  if (['auth', 'data', 'inventory'].includes(name)) {
     return name;
   };
   return singular(name);
