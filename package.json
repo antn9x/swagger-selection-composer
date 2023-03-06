@@ -2,7 +2,7 @@
   "name": "swagger-api-generator",
   "displayName": "swagger api generator",
   "description": "Generate Swagger api follow structured",
-  "version": "0.1.2",
+  "version": "1.0.1",
   "repository": "https://github.com/antn9x/swagger-api-generator",
   "publisher": "antn9x",
   "engines": {
@@ -12,6 +12,8 @@
     "Other"
   ],
   "activationEvents": [
+    "onCommand:swagger-api-generator.editSettings",
+    "onCommand:swagger-api-generator.startGen",
     "onCommand:swagger-api-generator.createModel",
     "onCommand:swagger-api-generator.createSchema",
     "onCommand:swagger-api-generator.createObject",
@@ -21,6 +23,14 @@
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
+      {
+        "command": "swagger-api-generator.editSettings",
+        "title": "Swagger Api Generator: Edit Settings"
+      },
+      {
+        "command": "swagger-api-generator.startGen",
+        "title": "Swagger Api Generator: Start Gen src"
+      },
       {
         "command": "swagger-api-generator.createApi",
         "title": "Swagger Api Generator: Create new path"
@@ -75,9 +85,11 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
+    "extract-zip": "^2.0.1",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
     "pluralize": "^8.0.0",
-    "sort-keys": "^5.0.0"
+    "sort-keys": "^5.0.0",
+    "zip-dir": "^2.0.0"
   }
 }
