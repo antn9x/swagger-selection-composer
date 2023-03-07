@@ -3,6 +3,7 @@
 import { posix } from 'path';
 import * as vscode from 'vscode';
 import { addModuleCommand, createApiCommand, createModelCommand, createObjectCommand, createSchemaCommand } from './commands';
+import { editSettingsCommand, startGenCommand } from './gen.src.command';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -32,6 +33,8 @@ export async function activate(context: vscode.ExtensionContext) {
   createSchemaCommand(context, folderUri);
   createObjectCommand(context, folderUri);
   addModuleCommand(context, folderUri);
+  editSettingsCommand(context, folderUri);
+  startGenCommand(context, folderUri);
 }
 
 // this method is called when your extension is deactivated
