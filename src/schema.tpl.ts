@@ -69,3 +69,10 @@ export function createDefaultSchema() {
     required: ['name']
   };
 }
+
+export function createDefaultEnum() {
+  return {
+    type: 'string',
+    enum: ['done', 'doing']
+  };
+}

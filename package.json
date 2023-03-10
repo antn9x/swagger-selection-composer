@@ -39,6 +39,10 @@
         "title": "Swagger Api Generator: Create new object"
       },
       {
+        "command": "swagger-api-generator.createEnum",
+        "title": "Swagger Api Generator: Create new enum"
+      },
+      {
         "command": "swagger-api-generator.addModule",
         "title": "Swagger Api Generator: Add new module"
       }

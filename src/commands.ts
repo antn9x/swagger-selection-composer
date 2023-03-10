@@ -4,7 +4,7 @@ import { plural } from 'pluralize';
 import * as vscode from 'vscode';
 import { methods } from './constants';
 import { readFileContent, writeFileContent } from './fileUtils';
-import { createApiMethod, createDefaultSchema, Method } from './schema.tpl';
+import { createApiMethod, createDefaultEnum, createDefaultSchema, Method } from './schema.tpl';
 import { getModuleName, getNameByRouter, getRouterName } from './stringUtils';
 import { jsonToYaml } from './yamlUtils';
 import sortKeys from 'sort-keys';
@@ -192,6 +192,42 @@ export function createObjectCommand(context: vscode.ExtensionContext, folderUri:
     const jsonSchema: any = yaml.load(moduleRouter) || {};
     if (!jsonSchema[obj]) {
       jsonSchema[obj] = createDefaultSchema();
+    }
+    await writeFileContent(moduleFilePath, jsonToYaml(jsonSchema));
+    // vscode.window.showInformationMessage(readStr);
+    vscode.window.showTextDocument(vscode.Uri.file(moduleFilePath));
+  });
+
+  context.subscriptions.push(disposable);
+}
+
+export function createEnumCommand(context: vscode.ExtensionContext, folderUri: vscode.Uri) {
+  let disposable = vscode.commands.registerCommand('swagger-api-generator.createEnum', async () => {
+    const enumType = await vscode.window.showInputBox({
+      value: '',
+      placeHolder: 'For example: RoleTypes',
+    });
+    if (!enumType) {
+      return vscode.window.showErrorMessage(`Not enumType name!`);
+    }
+    const apiFilePath = posix.join(folderUri.fsPath, 'docs', 'api.yaml');
+    const content = await readFileContent(apiFilePath);
+    const json: any = yaml.load(content);
+    if (json.components.schemas[enumType]) {
+      return vscode.window.showErrorMessage(`Enum name existed!`);
+    }
+    json.components.schemas[enumType] = { $ref: `enums.yaml#/${enumType}` };
+    json.components.schemas = sortKeys(json.components.schemas, {
+      compare: (a, b) => json.components.schemas[a].$ref.localeCompare(json.components.schemas[b].$ref)
+    });
+    const indexStr = jsonToYaml(json);
+    await writeFileContent(apiFilePath, indexStr);
+
+    const moduleFilePath = posix.join(folderUri.fsPath, 'docs', 'enums.yaml');
+    const moduleRouter = await readFileContent(moduleFilePath);
+    const jsonSchema: any = yaml.load(moduleRouter) || {};
+    if (!jsonSchema[enumType]) {
+      jsonSchema[enumType] = createDefaultEnum();
     }
     await writeFileContent(moduleFilePath, jsonToYaml(jsonSchema));
     // vscode.window.showInformationMessage(readStr);
