@@ -7,6 +7,7 @@ This is extension to generate swagger api by structured;
  - `Swagger Api Generator: Create new model`
  - `Swagger Api Generator: Create new schema`
  - `Swagger Api Generator: Create new object`
+ - `Swagger Api Generator: Create new enum`
  - `Swagger Api Generator: Create new module`
 ## Requirements
 

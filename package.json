@@ -2,7 +2,7 @@
   "name": "swagger-api-generator",
   "displayName": "swagger api generator",
   "description": "Generate Swagger api follow structured",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "repository": "https://github.com/antn9x/swagger-api-generator",
   "publisher": "antn9x",
   "engines": {
