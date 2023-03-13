@@ -77,7 +77,6 @@ export function createApiCommand(context: vscode.ExtensionContext, folderUri: vs
     await writeFileContent(moduleFilePath, jsonToYaml(jsonRouter));
     // vscode.window.showInformationMessage(readStr);
     vscode.window.showTextDocument(vscode.Uri.file(moduleFilePath));
-    vscode.commands.executeCommand('swagger-api-generator.syncPathSchema');
   });
 
   context.subscriptions.push(disposable);
