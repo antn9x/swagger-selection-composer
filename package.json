@@ -2,7 +2,7 @@
   "name": "swagger-api-generator",
   "displayName": "swagger api generator",
   "description": "Generate Swagger api follow structured",
-  "version": "1.0.2",
+  "version": "1.1.2",
   "repository": "https://github.com/antn9x/swagger-api-generator",
   "publisher": "antn9x",
   "engines": {
@@ -21,6 +21,10 @@
       {
         "command": "swagger-api-generator.startGen",
         "title": "Swagger Api Generator: Start Gen src"
+      },
+      {
+        "command": "swagger-api-generator.syncPathSchema",
+        "title": "Swagger Api Generator: Sync Path Schema Validation"
       },
       {
         "command": "swagger-api-generator.createApi",

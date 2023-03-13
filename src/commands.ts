@@ -1,6 +1,5 @@
 import yaml from 'js-yaml';
 import { posix } from 'path';
-import { plural } from 'pluralize';
 import * as vscode from 'vscode';
 import { methods } from './constants';
 import { readFileContent, writeFileContent } from './fileUtils';
@@ -78,6 +77,7 @@ export function createApiCommand(context: vscode.ExtensionContext, folderUri: vs
     await writeFileContent(moduleFilePath, jsonToYaml(jsonRouter));
     // vscode.window.showInformationMessage(readStr);
     vscode.window.showTextDocument(vscode.Uri.file(moduleFilePath));
+    vscode.commands.executeCommand('swagger-api-generator.syncPathSchema');
   });
 
   context.subscriptions.push(disposable);
@@ -124,6 +124,7 @@ export function createModelCommand(context: vscode.ExtensionContext, folderUri: 
     await writeFileContent(moduleFilePath, jsonToYaml(jsonModel));
     // vscode.window.showInformationMessage(readStr);
     vscode.window.showTextDocument(vscode.Uri.file(moduleFilePath));
+    vscode.commands.executeCommand('swagger-api-generator.syncPathSchema');
   });
 
   context.subscriptions.push(disposable);
@@ -160,6 +161,7 @@ export function createSchemaCommand(context: vscode.ExtensionContext, folderUri:
     await writeFileContent(moduleFilePath, jsonToYaml(jsonSchema));
     // vscode.window.showInformationMessage(readStr);
     vscode.window.showTextDocument(vscode.Uri.file(moduleFilePath));
+    vscode.commands.executeCommand('swagger-api-generator.syncPathSchema');
   });
 
   context.subscriptions.push(disposable);
@@ -196,6 +198,7 @@ export function createObjectCommand(context: vscode.ExtensionContext, folderUri:
     await writeFileContent(moduleFilePath, jsonToYaml(jsonSchema));
     // vscode.window.showInformationMessage(readStr);
     vscode.window.showTextDocument(vscode.Uri.file(moduleFilePath));
+    vscode.commands.executeCommand('swagger-api-generator.syncPathSchema');
   });
 
   context.subscriptions.push(disposable);
@@ -232,6 +235,7 @@ export function createEnumCommand(context: vscode.ExtensionContext, folderUri: v
     await writeFileContent(moduleFilePath, jsonToYaml(jsonSchema));
     // vscode.window.showInformationMessage(readStr);
     vscode.window.showTextDocument(vscode.Uri.file(moduleFilePath));
+    vscode.commands.executeCommand('swagger-api-generator.syncPathSchema');
   });
 
   context.subscriptions.push(disposable);
@@ -258,6 +262,25 @@ export function addModuleCommand(context: vscode.ExtensionContext, folderUri: vs
     const moduleList: any[] = context.workspaceState.get('moduleList', []);
     moduleList.unshift(module);
     context.workspaceState.update('moduleList', moduleList);
+  });
+
+  context.subscriptions.push(disposable);
+}
+
+export function syncPathSchemaCommand(context: vscode.ExtensionContext, folderUri: vscode.Uri) {
+  let disposable = vscode.commands.registerCommand('swagger-api-generator.syncPathSchema', async () => {
+    const apiFilePath = posix.join(folderUri.fsPath, 'docs', 'api.yaml');
+    const content = await readFileContent(apiFilePath);
+    const json: any = yaml.load(content);
+    const listSchemas = Object.values(json.components.schemas).map(schema => {
+      const { $ref } = schema as any;
+      return `../${$ref}`;
+    });
+    const pathSchemaFile = posix.join(folderUri.fsPath, '.vscode', 'path-schema.json');
+    const schema = await readFileContent(pathSchemaFile);
+    const schemaJson = JSON.parse(schema);
+    schemaJson.definitions.Reference.properties.$ref.enum = listSchemas;
+    await writeFileContent(pathSchemaFile, JSON.stringify(schemaJson, null, 2));
   });
 
   context.subscriptions.push(disposable);

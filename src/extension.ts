@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import { posix } from 'path';
 import * as vscode from 'vscode';
-import { addModuleCommand, createApiCommand, createEnumCommand, createModelCommand, createObjectCommand, createSchemaCommand } from './commands';
+import { addModuleCommand, createApiCommand, createEnumCommand, createModelCommand, createObjectCommand, createSchemaCommand, syncPathSchemaCommand } from './commands';
 import { editSettingsCommand, startGenCommand } from './gen.src.command';
 
 // this method is called when your extension is activated
@@ -36,6 +36,7 @@ export async function activate(context: vscode.ExtensionContext) {
   addModuleCommand(context, folderUri);
   editSettingsCommand(context, folderUri);
   startGenCommand(context, folderUri);
+  syncPathSchemaCommand(context, folderUri);
 }
 
 // this method is called when your extension is deactivated
