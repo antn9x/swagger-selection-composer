@@ -16,7 +16,7 @@ function getSummary(method: Method, module: string, router: string) {
 }
 
 export function createApiMethod(method: Method, module: string, router: string) {
-  return {
+  const defaultApiObject: any = {
     tags: [upperFirst(module)],
     summary: getSummary(method, module, router),
     security: [{ bearerAuth: [] }],
@@ -56,6 +56,16 @@ export function createApiMethod(method: Method, module: string, router: string) 
       }
     }
   };
+  if (method === 'get') {
+    delete defaultApiObject.requestBody;
+    defaultApiObject.responses[200].content['application/json'].schema = {
+      type: 'array',
+      items: {
+        $ref: `../models/${module}.yaml#/${upperFirst(module)}`
+      }
+    };
+  }
+  return defaultApiObject;
 }
 
 export function createDefaultSchema() {
