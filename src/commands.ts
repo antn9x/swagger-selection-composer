@@ -286,6 +286,13 @@ export function syncPathSchemaCommand(context: vscode.ExtensionContext, folderUr
     const schemaJson = JSON.parse(schema);
     schemaJson.definitions.Reference.properties.$ref.enum = listSchemas;
     await writeFileContent(pathSchemaFile, JSON.stringify(schemaJson, null, 2));
+    const objectSchemaFile = posix.join(folderUri.fsPath, '.vscode', 'object-schema.json');
+    const schemaObject = await readFileContent(objectSchemaFile);
+    const schemaObjectJson = JSON.parse(schemaObject);
+    schemaObjectJson.definitions.Reference.properties.$ref.enum = listSchemas
+      .filter(model => !model.includes('responses.yaml'))
+      .map(model => model.replace('../models/', ''));
+    await writeFileContent(objectSchemaFile, JSON.stringify(schemaObjectJson, null, 2));
   });
 
   context.subscriptions.push(disposable);
