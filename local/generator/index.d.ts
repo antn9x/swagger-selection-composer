@@ -1,13 +1,11 @@
 interface GeneratorConfig {
-  isGenSpec?: boolean;
   isCreatePolicy?: boolean;
-  versionPrefix?: string;
   clientSDKs?: {
     type: 'cocos' | 'unity' | 'js' | 'ts',
     outPath: string,
     isCleanUp: boolean, // delete old generated
   }[];
-  excludedSpec?: string[];
+  excludedSpec?: string; // default all
   routerMode?: 'userId' | 'decoded'; // default decoded
 }
 
