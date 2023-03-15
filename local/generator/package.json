@@ -1,0 +1,6 @@
+{
+  "name": "generator",
+  "version": "1.4.2",
+  "main": "generator.js",
+  "types": "./index.d.ts"
+}
