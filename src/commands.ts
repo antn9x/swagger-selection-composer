@@ -277,10 +277,12 @@ export function syncPathSchemaCommand(context: vscode.ExtensionContext, folderUr
     });
     const responsesFilePath = posix.join(folderUri.fsPath, 'docs', 'responses.yaml');
     const contentRes = await readFileContent(responsesFilePath);
-    const jsonRes: any = yaml.load(contentRes);
-    const resList = Object.keys(jsonRes)
-      .map(key => `../responses.yaml#/${key}`);
-    listSchemas.push(...resList);
+    if (contentRes) {
+      const jsonRes: any = yaml.load(contentRes);
+      const resList = Object.keys(jsonRes)
+        .map(key => `../responses.yaml#/${key}`);
+      listSchemas.push(...resList);
+    }
     const pathSchemaFile = posix.join(folderUri.fsPath, '.vscode', 'path-schema.json');
     const schema = await readFileContent(pathSchemaFile);
     const schemaJson = JSON.parse(schema);

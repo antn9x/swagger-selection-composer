@@ -2,7 +2,7 @@
   "name": "swagger-api-generator",
   "displayName": "swagger api generator",
   "description": "Generate Swagger api follow structured",
-  "version": "1.3.17",
+  "version": "1.4.1",
   "repository": "https://github.com/antn9x/swagger-api-generator",
   "publisher": "antn9x",
   "engines": {
@@ -54,7 +54,32 @@
         "command": "swagger-api-generator.addModule",
         "title": "Swagger Api Generator: Add new module"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Generator Options",
+      "properties": {
+        "swagger-api-generator": {
+          "type": "object",
+          "properties": {
+            "isCreatePolicy": {
+              "type": "boolean"
+            },
+            "excludedSpec": {
+              "type": "string",
+              "default": "all"
+            },
+            "routerMode": {
+              "type": "string",
+              "enum": [
+                "userId",
+                "decoded"
+              ]
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    }
   },
   "scripts": {
     "deploy": "vsce package",
