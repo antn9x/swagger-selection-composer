@@ -45,11 +45,11 @@ export function createApiMethod(method: Method, module: string, router: string) 
             schema: {
               type: 'object',
               properties: {
-                _id: {
+                id: {
                   type: 'string'
                 }
               },
-              required: ['_id']
+              required: ['id']
             }
           }
         }
