@@ -58,12 +58,21 @@ export function createApiMethod(method: Method, module: string, router: string) 
   };
   if (method === 'get') {
     delete defaultApiObject.requestBody;
-    defaultApiObject.responses[200].content['application/json'].schema = {
-      type: 'array',
-      items: {
+    if (router.includes('{id}')) {
+      defaultApiObject.responses[200].content['application/json'].schema = {
         $ref: `../models/${module}.yaml#/${upperFirst(module)}`
-      }
-    };
+      };
+    } else {
+      defaultApiObject.responses[200].content['application/json'].schema = {
+        type: 'array',
+        items: {
+          $ref: `../models/${module}.yaml#/${upperFirst(module)}`
+        }
+      };
+    }
+  }
+  if (method === 'post') {
+    delete defaultApiObject.parameters;
   }
   return defaultApiObject;
 }
@@ -72,11 +81,14 @@ export function createDefaultSchema() {
   return {
     type: 'object',
     properties: {
+      id: {
+        type: 'string'
+      },
       name: {
         type: 'string'
       }
     },
-    required: ['name']
+    required: ['id', 'name']
   };
 }
 
