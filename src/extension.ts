@@ -3,7 +3,7 @@
 import { posix } from 'path';
 import * as vscode from 'vscode';
 import { addModuleCommand, createApiCommand, createEnumCommand, createModelCommand, createObjectCommand, createSchemaCommand, syncPathSchemaCommand } from './commands';
-import { editSettingsCommand, startGenCommand } from './gen.src.command';
+import { initDocsCommand, startGenCommand } from './gen.src.command';
 import { updateGenBinCommand } from './update.command';
 
 // this method is called when your extension is activated
@@ -35,7 +35,7 @@ export async function activate(context: vscode.ExtensionContext) {
   createObjectCommand(context, folderUri);
   createEnumCommand(context, folderUri);
   addModuleCommand(context, folderUri);
-  editSettingsCommand(context, folderUri);
+  initDocsCommand(context, folderUri);
   startGenCommand(context, folderUri);
   updateGenBinCommand(context, folderUri);
   syncPathSchemaCommand(context, folderUri);

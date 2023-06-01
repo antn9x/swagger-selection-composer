@@ -2,7 +2,7 @@
   "name": "swagger-api-generator",
   "displayName": "swagger api generator",
   "description": "Generate Swagger api follow structured",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "repository": "https://github.com/antn9x/swagger-api-generator",
   "publisher": "antn9x",
   "engines": {
@@ -15,8 +15,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "swagger-api-generator.editSettings",
-        "title": "Swagger Api Generator: Edit Settings"
+        "command": "swagger-api-generator.initDocs",
+        "title": "Swagger Api Generator: Init docs"
       },
       {
         "command": "swagger-api-generator.startGen",
