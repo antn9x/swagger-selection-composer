@@ -9,13 +9,18 @@ const methodMap = {
 };
 
 export type Method = 'get' | 'post' | 'put' | 'delete';
+export interface MethodOptions{
+  method: Method,
+  isResponse: boolean,
+}
+
 
 function getSummary(method: Method, module: string, router: string) {
   return `${methodMap[method]} ${router.split('/').length >= 3 ?
     getNameByRouter(router) : module}`;
 }
 
-export function createApiMethod(method: Method, module: string, router: string) {
+export function createApiMethod(method: Method, module: string, router: string, isResponse?: boolean) {
   const defaultApiObject: any = {
     tags: [upperFirst(module)],
     summary: getSummary(method, module, router),
@@ -58,6 +63,11 @@ export function createApiMethod(method: Method, module: string, router: string) 
   };
   if (method === 'get') {
     delete defaultApiObject.requestBody;
+    if(isResponse){
+      defaultApiObject.responses[200] = {
+        $ref: `../models/${module}.yaml#/${upperFirst(module)}`
+      }
+    }
     if (router.includes('{id}')) {
       defaultApiObject.responses[200].content['application/json'].schema = {
         $ref: `../models/${module}.yaml#/${upperFirst(module)}`
