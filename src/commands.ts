@@ -8,6 +8,7 @@ import { getModuleName, getNameByRouter, getRouterName } from './stringUtils';
 import { jsonToYaml } from './yamlUtils';
 import sortKeys from 'sort-keys';
 import * as fs from 'fs';
+import { upperFirst } from 'lodash';
 
 export function createApiCommand(context: vscode.ExtensionContext, folderUri: vscode.Uri) {
   let disposable = vscode.commands.registerCommand('swagger-api-generator.createApi', async () => {
@@ -35,11 +36,6 @@ export function createApiCommand(context: vscode.ExtensionContext, folderUri: vs
     const selectedMethods: MethodOptions[] = [];
     let isExit = false;
     do {
-      // const selected = await vscode.window.showQuickPick(methods.filter(m => !selectedMethods.includes(m)), {
-      //   placeHolder: 'Select methods',
-      //   // onDidSelectItem: item => vscode.window.showInformationMessage(`Focus ${++i}: ${item}`)
-      // });
-
       const selected = await vscode.window.showQuickPick(methods.filter(m => !selectedMethods.some(option => option.method == m)), {
         placeHolder: 'Select methods',
         // onDidSelectItem: item => vscode.window.showInformationMessage(`Focus ${++i}: ${item}`)
@@ -62,7 +58,6 @@ export function createApiCommand(context: vscode.ExtensionContext, folderUri: vs
       return vscode.window.showErrorMessage(`Not methods!`);
     }
     const fileUri = folderUri.with({ path: posix.join(folderUri.path, 'docs', 'api.yaml') });
-
     const readData = await vscode.workspace.fs.readFile(fileUri);
     const content = Buffer.from(readData).toString('utf8');
     const json: any = content ? yaml.load(content) : {};
@@ -84,16 +79,35 @@ export function createApiCommand(context: vscode.ExtensionContext, folderUri: vs
       jsonRouter[name] = {};
     }
     selectedMethods.forEach(method => {
-      let check = 0;
-      if (method.isResponse && !jsonRouter[name][method.method] ) {
-        jsonRouter[name][method.method] = createApiMethod(method.method, moduleName, routePath, method.isResponse);
-        check = 1;
-      }
-      if(!jsonRouter[name][method.method] && check !== 0){
+      if (!jsonRouter[name][method.method]) {
         jsonRouter[name][method.method] = createApiMethod(method.method, moduleName, routePath, method.isResponse);
       }
     });
     await writeFileContent(moduleFilePath, jsonToYaml(jsonRouter));
+    if(selectedMethods.some(option => option.isResponse == true)){
+      const model = `${upperFirst(module)}${upperFirst(router)}Response`;
+      const apiFilePath = posix.join(folderUri.path, 'docs', 'api.yaml');
+      const content = await readFileContent(apiFilePath);
+      const json: any = yaml.load(content);
+      if (json.components.schemas[model]) {
+        return vscode.window.showErrorMessage(`Model name existed!`);
+      }
+      json.components.schemas[model] = { $ref: `models/${module}.yaml#/${model}` };
+      json.components.schemas = sortKeys(json.components.schemas, {
+        compare: (a, b) => json.components.schemas[a].$ref.localeCompare(json.components.schemas[b].$ref)
+      });
+      const indexStr = jsonToYaml(json);
+      await writeFileContent(apiFilePath, indexStr);
+
+      const moduleFilePath = posix.join(folderUri.path, 'docs', 'models', `${module}.yaml`);
+      const moduleRouter = await readFileContent(moduleFilePath);
+      const jsonModel: any = yaml.load(moduleRouter) || {};
+      if (!jsonModel[model]) {
+        jsonModel[model] = createDefaultSchema();
+      }
+      await writeFileContent(moduleFilePath, jsonToYaml(jsonModel));
+      vscode.commands.executeCommand('swagger-api-generator.syncPathSchema');
+    }
     // vscode.window.showInformationMessage(readStr);
     vscode.window.showTextDocument(vscode.Uri.file(moduleFilePath));
   });

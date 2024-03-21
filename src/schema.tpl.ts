@@ -61,22 +61,26 @@ export function createApiMethod(method: Method, module: string, router: string, 
       }
     }
   };
+  let ref;
+  if(isResponse){
+    const editRouter = router.split('/')[2];
+    ref = `../models/${module}.yaml#/${upperFirst(module)}${upperFirst(editRouter)}Response`;
+    defaultApiObject.responses[200].content['application/json'].schema = {
+      $ref: ref
+    };
+  } else ref = `../models/${module}.yaml#/${upperFirst(module)}`
+
   if (method === 'get') {
     delete defaultApiObject.requestBody;
-    if(isResponse){
-      defaultApiObject.responses[200] = {
-        $ref: `../models/${module}.yaml#/${upperFirst(module)}`
-      }
-    }
     if (router.includes('{id}')) {
       defaultApiObject.responses[200].content['application/json'].schema = {
-        $ref: `../models/${module}.yaml#/${upperFirst(module)}`
+        $ref: ref
       };
     } else {
       defaultApiObject.responses[200].content['application/json'].schema = {
         type: 'array',
         items: {
-          $ref: `../models/${module}.yaml#/${upperFirst(module)}`
+          $ref: ref
         }
       };
     }
