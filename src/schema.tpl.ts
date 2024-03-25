@@ -9,7 +9,7 @@ const methodMap = {
 };
 
 export type Method = 'get' | 'post' | 'put' | 'delete';
-export interface MethodOptions{
+export interface MethodOptions {
   method: Method,
   isResponse: boolean,
 }
@@ -62,14 +62,15 @@ export function createApiMethod(method: Method, module: string, router: string, 
     }
   };
   let ref;
-  if(isResponse){
+  if (isResponse) {
     const editRouter = router.split('/')[2];
     ref = `../models/${module}.yaml#/${upperFirst(module)}${upperFirst(editRouter)}Response`;
     defaultApiObject.responses[200].content['application/json'].schema = {
       $ref: ref
     };
-  } else ref = `../models/${module}.yaml#/${upperFirst(module)}`
-
+  } else {
+    ref = `../models/${module}.yaml#/${upperFirst(module)}`
+  }
   if (method === 'get') {
     delete defaultApiObject.requestBody;
     if (router.includes('{id}')) {

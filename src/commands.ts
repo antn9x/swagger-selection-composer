@@ -1,14 +1,13 @@
+import * as fs from 'fs';
 import yaml from 'js-yaml';
 import { posix } from 'path';
+import sortKeys from 'sort-keys';
 import * as vscode from 'vscode';
 import { confirm, methods } from './constants';
 import { readFileContent, writeFileContent } from './fileUtils';
-import { createApiMethod, createDefaultEnum, createDefaultSchema, Method, MethodOptions } from './schema.tpl';
-import { getModuleName, getNameByRouter, getRouterName } from './stringUtils';
+import { Method, MethodOptions, createApiMethod, createDefaultEnum, createDefaultSchema } from './schema.tpl';
+import { getModuleName, getNameByRouter, getRouterName, pascalCase } from './stringUtils';
 import { jsonToYaml } from './yamlUtils';
-import sortKeys from 'sort-keys';
-import * as fs from 'fs';
-import { upperFirst } from 'lodash';
 
 export function createApiCommand(context: vscode.ExtensionContext, folderUri: vscode.Uri) {
   let disposable = vscode.commands.registerCommand('swagger-api-generator.createApi', async () => {
@@ -37,22 +36,22 @@ export function createApiCommand(context: vscode.ExtensionContext, folderUri: vs
     let isExit = false;
     do {
       const selected = await vscode.window.showQuickPick(methods.filter(m => !selectedMethods.some(option => option.method == m)), {
-        placeHolder: 'Select methods',
+        placeHolder: 'Select methods (Press "Esc" to exit)',
         // onDidSelectItem: item => vscode.window.showInformationMessage(`Focus ${++i}: ${item}`)
       });
-      const selectedResponse = await vscode.window.showQuickPick(confirm, {
-        placeHolder: 'Do you want to create Response?',
-      });
 
-      if (selected && selectedResponse ) {
+      if (selected) {
+        const selectedResponse = await vscode.window.showQuickPick(confirm, {
+          placeHolder: 'Do you want to create Response?',
+        });
         const isResponse = selectedResponse === "Yes" ? true : false;
-        const option:MethodOptions = {
+        const option: MethodOptions = {
           method: selected as Method,
           isResponse: isResponse,
         }
         selectedMethods.push(option);
       }
-      isExit = !selected || !selectedResponse;
+      isExit = !selected;
     } while (selectedMethods.length !== methods.length && !isExit);
     if (!selectedMethods.length) {
       return vscode.window.showErrorMessage(`Not methods!`);
@@ -84,8 +83,8 @@ export function createApiCommand(context: vscode.ExtensionContext, folderUri: vs
       }
     });
     await writeFileContent(moduleFilePath, jsonToYaml(jsonRouter));
-    if(selectedMethods.some(option => option.isResponse == true)){
-      const model = `${upperFirst(module)}${upperFirst(router)}Response`;
+    if (selectedMethods.some(option => option.isResponse)) {
+      const model = `${pascalCase(module)}${pascalCase(router)}Response`;
       const apiFilePath = posix.join(folderUri.path, 'docs', 'api.yaml');
       const content = await readFileContent(apiFilePath);
       const json: any = yaml.load(content);

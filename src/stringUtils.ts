@@ -1,3 +1,4 @@
+import { upperFirst, camelCase } from 'lodash';
 import last from 'lodash/last';
 import { singular, plural } from "pluralize";
 
@@ -23,4 +24,8 @@ export function getRouterName(name = '') {
     return name;
   };
   return plural(name);
+}
+
+export function pascalCase(str: string) {
+  return upperFirst(camelCase(str))
 }
