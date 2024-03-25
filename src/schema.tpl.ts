@@ -9,13 +9,18 @@ const methodMap = {
 };
 
 export type Method = 'get' | 'post' | 'put' | 'delete';
+export interface MethodOptions{
+  method: Method,
+  isResponse: boolean,
+}
+
 
 function getSummary(method: Method, module: string, router: string) {
   return `${methodMap[method]} ${router.split('/').length >= 3 ?
     getNameByRouter(router) : module}`;
 }
 
-export function createApiMethod(method: Method, module: string, router: string) {
+export function createApiMethod(method: Method, module: string, router: string, isResponse?: boolean) {
   const defaultApiObject: any = {
     tags: [upperFirst(module)],
     summary: getSummary(method, module, router),
@@ -56,17 +61,26 @@ export function createApiMethod(method: Method, module: string, router: string) 
       }
     }
   };
+  let ref;
+  if(isResponse){
+    const editRouter = router.split('/')[2];
+    ref = `../models/${module}.yaml#/${upperFirst(module)}${upperFirst(editRouter)}Response`;
+    defaultApiObject.responses[200].content['application/json'].schema = {
+      $ref: ref
+    };
+  } else ref = `../models/${module}.yaml#/${upperFirst(module)}`
+
   if (method === 'get') {
     delete defaultApiObject.requestBody;
     if (router.includes('{id}')) {
       defaultApiObject.responses[200].content['application/json'].schema = {
-        $ref: `../models/${module}.yaml#/${upperFirst(module)}`
+        $ref: ref
       };
     } else {
       defaultApiObject.responses[200].content['application/json'].schema = {
         type: 'array',
         items: {
-          $ref: `../models/${module}.yaml#/${upperFirst(module)}`
+          $ref: ref
         }
       };
     }
