@@ -1,5 +1,5 @@
 import upperFirst from 'lodash/upperFirst';
-import { getNameByRouter } from './stringUtils';
+import { getNameByRouter, pascalCase } from './stringUtils';
 
 const methodMap = {
   get: 'Get',
@@ -64,12 +64,12 @@ export function createApiMethod(method: Method, module: string, router: string, 
   let ref;
   if (isResponse) {
     const editRouter = router.split('/')[2];
-    ref = `../models/${module}.yaml#/${upperFirst(module)}${upperFirst(editRouter)}Response`;
+    ref = `../models/${module}.yaml#/${pascalCase(module)}${pascalCase(editRouter)}Response`;
     defaultApiObject.responses[200].content['application/json'].schema = {
       $ref: ref
     };
   } else {
-    ref = `../models/${module}.yaml#/${upperFirst(module)}`
+    ref = `../models/${module}.yaml#/${pascalCase(module)}`
   }
   if (method === 'get') {
     delete defaultApiObject.requestBody;
